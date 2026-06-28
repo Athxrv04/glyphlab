@@ -204,7 +204,7 @@ const HeroGallery = (() => {
 
             if (currentLine < totalLines) {
                 const batchSize = Math.max(1, Math.ceil(totalLines / (ANIMATION_DURATION / 16)));
-                for (let b = 1; b < batchSize && currentLine < totalLines; b++) {
+                for (let b = 0; b < batchSize && currentLine < totalLines; b++) {
                     currentLine++;
                 }
                 const revealedBatch = lines.slice(0, currentLine);
