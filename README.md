@@ -22,6 +22,7 @@
 
 ## 🔗 Links
 
+* **Live Demo:** [https://glyphlab-app.vercel.app/](https://glyphlab-app.vercel.app/)
 * **GitHub Repository:** [https://github.com/Athxrv04/glyphlab](https://github.com/Athxrv04/glyphlab)
 * **GitHub Profile:** [Atharv Sharma](https://github.com/Athxrv04)
 * **LinkedIn:** [Atharv Sharma](https://www.linkedin.com/in/atharv-sharma-dev)
