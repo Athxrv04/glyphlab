@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GLYPHLAB Converter — Upload any image and transform it into ASCII character art.">
+    <title>GLYPHLAB · Converter</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="assets/logos/favicon.png?v=1">
+    <link rel="shortcut icon" type="image/png" href="assets/logos/favicon.png?v=1">
+</head>
+<body>
+
+    <header class="header" role="banner">
+        <a href="index.html" class="header__logo">
+            <img src="assets/logos/logo.png" alt="GLYPHLAB Logo" class="header__logo-img">
+            <span>GLYPHLAB</span>
+        </a>
+        <nav class="header__nav" aria-label="Main navigation">
+            <a class="header__btn" href="index.html">Home</a>
+            <a class="header__btn header__btn--active" href="converter.html">Converter</a>
+            <a class="header__btn" href="camera.html">Live Camera</a>
+            <button class="header__btn header__btn--accent" onclick="UI.openAbout()">About</button>
+            <div class="theme-selector" id="themeSelector">
+                <button class="theme-selector__btn" title="Theme" aria-label="Change theme" id="themeToggleBtn">◈ Theme</button>
+                <div class="theme-selector__dropdown" id="themeDropdown">
+                    <button class="theme-option" data-theme="white"><span class="theme-option__swatch" style="background:#FFFFFF"></span> White Terminal</button>
+                    <button class="theme-option" data-theme="green"><span class="theme-option__swatch" style="background:#00FF88"></span> Green CRT</button>
+                    <button class="theme-option" data-theme="amber"><span class="theme-option__swatch" style="background:#FFB000"></span> Amber CRT</button>
+                    <button class="theme-option" data-theme="blue"><span class="theme-option__swatch" style="background:#00CCFF"></span> Cyber Blue</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Page Banner -->
+    <div class="page-hero">
+        <h1 class="page-hero__title">PNG → ASCII Converter</h1>
+        <p class="page-hero__sub">Upload any image and watch it transform into character art in real time</p>
+    </div>
+
+    <!-- UPLOAD -->
+    <section class="section" id="upload-section" aria-label="Upload">
+        <div class="section__label">01 — Upload</div>
+        <h2 class="section__title">Choose Your Image</h2>
+        <div class="upload" id="uploadZone" role="button" tabindex="0" aria-label="Upload image by clicking, dragging, or pasting">
+            <span class="upload__icon" aria-hidden="true">⬆</span>
+            <div class="upload__text"><strong>Drop an image here</strong><br>or click to upload · or paste from clipboard</div>
+            <div class="upload__formats">Supports PNG · JPG · JPEG · WEBP · Max 20 MB</div>
+            <input type="file" class="upload__input" id="fileInput" accept=".png,.jpg,.jpeg,.webp" aria-label="Choose image file">
+        </div>
+    </section>
+
+    <!-- CONTROLS -->
+    <section class="section" id="controls-section" aria-label="Controls">
+        <div class="section__label">02 — Settings</div>
+        <h2 class="section__title">Conversion Controls</h2>
+        <div class="controls">
+            <div class="control-group">
+                <div class="control-group__title">◈ Density & Resolution</div>
+                <div class="control-row"><label for="densitySlider">ASCII Width</label><span class="val" id="densityVal">120</span></div>
+                <input type="range" id="densitySlider" min="20" max="250" value="120" aria-label="ASCII density">
+                <div class="control-row" style="margin-top:14px"><label for="fontSlider">Font Size</label><span class="val" id="fontVal">10px</span></div>
+                <input type="range" id="fontSlider" min="4" max="20" value="10" aria-label="Font size">
+            </div>
+            <div class="control-group">
+                <div class="control-group__title">◈ Image Adjustments</div>
+                <div class="control-row"><label for="contrastSlider">Contrast</label><span class="val" id="contrastVal">100%</span></div>
+                <input type="range" id="contrastSlider" min="50" max="200" value="100" aria-label="Contrast">
+                <div class="control-row" style="margin-top:14px"><label for="brightnessSlider">Brightness</label><span class="val" id="brightnessVal">100%</span></div>
+                <input type="range" id="brightnessSlider" min="50" max="200" value="100" aria-label="Brightness">
+            </div>
+            <div class="control-group">
+                <div class="control-group__title">◈ Character Set</div>
+                <div class="control-row"><label for="presetSelect">Preset</label>
+                    <select id="presetSelect" aria-label="Character preset">
+                        <option value="classic">Classic</option>
+                        <option value="detailed">Detailed</option>
+                        <option value="terminal">Terminal ░▒▓█</option>
+                        <option value="pixel">Pixel ■□▪▫</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+                <input type="text" class="char-input" id="customChars" placeholder="Enter custom characters..." aria-label="Custom characters" style="display:none">
+            </div>
+            <div class="control-group">
+                <div class="control-group__title">◈ Display Modes</div>
+                <div class="control-row"><label>Invert Colors</label><button class="toggle" id="invertToggle" role="switch" aria-checked="false" aria-label="Invert colors"></button></div>
+                <div class="control-row"><label>Colored ASCII</label><button class="toggle" id="coloredToggle" role="switch" aria-checked="false" aria-label="Colored ASCII"></button></div>
+                <div class="control-row"><label for="bgSelect">Background</label>
+                    <select id="bgSelect" aria-label="Background mode">
+                        <option value="dark">Dark</option>
+                        <option value="light">Light</option>
+                        <option value="transparent">Transparent</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="shortcuts" aria-label="Keyboard shortcuts">
+            <div class="shortcut"><kbd>Ctrl</kbd>+<kbd>O</kbd> Upload</div>
+            <div class="shortcut"><kbd>Ctrl</kbd>+<kbd>C</kbd> Copy</div>
+            <div class="shortcut"><kbd>Ctrl</kbd>+<kbd>S</kbd> Download</div>
+        </div>
+    </section>
+
+    <!-- PREVIEW -->
+    <section class="section" id="preview-section" aria-label="Preview">
+        <div class="section__label">03 — Preview</div>
+        <h2 class="section__title">Output</h2>
+        <div class="preview-mode-switch">
+            <button class="preview-mode-btn active" id="modeStandard">Standard Preview</button>
+            <button class="preview-mode-btn" id="modeComparison">Comparison View</button>
+        </div>
+        <div class="preview" id="previewGrid">
+            <div class="preview__pane" id="originalPane">
+                <div class="preview__header"><span>▸ ORIGINAL</span>
+                    <div class="preview__header-actions"><button class="preview__action" title="Fullscreen" onclick="UI.toggleFullscreen(document.getElementById('originalPane'))">⛶</button></div>
+                </div>
+                <div class="preview__body" id="originalBody">
+                    <div class="empty-state">
+                        <pre class="empty-state__art" aria-hidden="true">
+    ██████╗ ███╗   ██╗ ██████╗ 
+    ██╔══██╗████╗  ██║██╔════╝ 
+    ██████╔╝██╔██╗ ██║██║  ███╗
+    ██╔═══╝ ██║╚██╗██║██║   ██║
+    ██║     ██║ ╚████║╚██████╔╝
+    ╚═╝     ╚═╝  ╚═══╝ ╚═════╝</pre>
+                        <span>No image loaded</span>
+                    </div>
+                </div>
+            </div>
+            <div class="preview__pane" id="asciiPane">
+                <div class="preview__header"><span>▸ ASCII OUTPUT</span>
+                    <div class="preview__header-actions">
+                        <div class="zoom-controls">
+                            <button class="zoom-btn" id="zoomOut" title="Zoom Out">−</button>
+                            <button class="zoom-btn" id="zoomReset" title="Reset Zoom">1:1</button>
+                            <button class="zoom-btn" id="zoomIn" title="Zoom In">+</button>
+                        </div>
+                        <button class="preview__action" title="Fullscreen" onclick="UI.toggleFullscreen(document.getElementById('asciiPane'))">⛶</button>
+                    </div>
+                </div>
+                <div class="preview__body" id="asciiBody">
+                    <div class="empty-state" id="asciiEmpty">
+                        <pre class="empty-state__art" aria-hidden="true">
+     █████╗ ███████╗ ██████╗██╗██╗
+    ██╔══██╗██╔════╝██╔════╝██║██║
+    ███████║███████╗██║     ██║██║
+    ██╔══██║╚════██║██║     ██║██║
+    ██║  ██║███████║╚██████╗██║██║
+    ╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝╚═╝</pre>
+                        <span>ASCII output will appear here</span>
+                    </div>
+                    <pre class="ascii-output" id="asciiOutput" style="display:none" tabindex="0" aria-label="ASCII art output"></pre>
+                </div>
+            </div>
+        </div>
+        <div class="comparison-wrapper" id="comparisonView">
+            <div class="comparison-original" id="compOriginal"></div>
+            <div class="comparison-ascii" id="compAscii"></div>
+            <div class="comparison-handle" id="compSlider" tabindex="0" role="slider" aria-valuenow="50" aria-valuemin="5" aria-valuemax="95" aria-label="Before/After comparison slider">
+                <div class="comparison-handle-button"></div>
+            </div>
+        </div>
+        <div class="stats" id="statsBar" style="display:none">
+            <div class="stat"><span class="stat__label">Characters</span><span class="stat__value" id="statChars">—</span></div>
+            <div class="stat"><span class="stat__label">Lines</span><span class="stat__value" id="statLines">—</span></div>
+            <div class="stat"><span class="stat__label">Gen Time</span><span class="stat__value" id="statTime">—</span></div>
+            <div class="stat"><span class="stat__label">Resolution</span><span class="stat__value" id="statRes">—</span></div>
+            <div class="stat"><span class="stat__label">Preset</span><span class="stat__value" id="statPreset">—</span></div>
+            <div class="stat"><span class="stat__label">Density</span><span class="stat__value" id="statDensity">—</span></div>
+            <div class="stat"><span class="stat__label">Compression</span><span class="stat__value" id="statCompression">—</span></div>
+            <div class="stat"><span class="stat__label">File Size</span><span class="stat__value" id="statFileSize">—</span></div>
+            <div class="stat"><span class="stat__label">Color</span><span class="stat__value" id="statColorMode">—</span></div>
+            <div class="stat"><span class="stat__label">Background</span><span class="stat__value" id="statBgMode">—</span></div>
+        </div>
+    </section>
+
+    <!-- EXPORT -->
+    <section class="section" id="export-section" aria-label="Export">
+        <div class="section__label">04 — Export</div>
+        <h2 class="section__title">Download Your Art</h2>
+        <div class="export-grid">
+            <button class="export-btn" id="exportCopy"><span class="export-btn__icon"><img src="assets/icons/copy.png" class="export-btn__icon-img" alt="Copy"></span><div class="export-btn__info"><span class="export-btn__label">Copy ASCII</span><span class="export-btn__desc">Copy to clipboard</span></div></button>
+            <button class="export-btn" id="exportTxt"><span class="export-btn__icon"><img src="assets/icons/downloadtxt.png" class="export-btn__icon-img" alt="Download TXT"></span><div class="export-btn__info"><span class="export-btn__label">Download TXT</span><span class="export-btn__desc">Plain text file</span></div></button>
+            <button class="export-btn" id="exportHtml"><span class="export-btn__icon"><img src="assets/icons/downloadhtml.png" class="export-btn__icon-img" alt="Download HTML"></span><div class="export-btn__info"><span class="export-btn__label">Download HTML</span><span class="export-btn__desc">Colored HTML page</span></div></button>
+            <button class="export-btn" id="exportPng"><span class="export-btn__icon"><img src="assets/icons/downloadpng.png" class="export-btn__icon-img" alt="Download PNG"></span><div class="export-btn__info"><span class="export-btn__label">Download PNG</span><span class="export-btn__desc">Rendered image</span></div></button>
+            <button class="export-btn" id="exportSvg"><span class="export-btn__icon">✦</span><div class="export-btn__info"><span class="export-btn__label">Download SVG</span><span class="export-btn__desc">Scalable vector</span></div></button>
+        </div>
+    </section>
+
+    <footer class="footer" role="contentinfo">
+        <div class="footer__content">
+            <img src="assets/logos/logo.png" alt="GLYPHLAB Logo" class="footer__logo-img">
+            <p>
+                <span>GLYPHLAB</span> <span class="footer__version">v1.0.0</span>
+                <span class="footer__divider">·</span>
+                <span>Created by <span class="footer__socials-name">Atharv Sharma</span></span>
+                <span class="footer__divider">·</span>
+                <a href="https://github.com/Athxrv04" target="_blank" rel="noopener noreferrer" class="footer__link">GitHub</a>
+                <span class="footer__divider">·</span>
+                <a href="https://www.linkedin.com/in/atharv-sharma-dev" target="_blank" rel="noopener noreferrer" class="footer__link">LinkedIn</a>
+            </p>
+        </div>
+        <p class="footer__credits">Built with HTML, CSS & Vanilla JavaScript · Zero Dependencies</p>
+    </footer>
+
+    <!-- About Modal -->
+    <div class="modal" id="aboutModal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal__card">
+            <button class="modal__close" onclick="UI.closeAbout()" aria-label="Close modal">✕</button>
+            <h2>About GLYPHLAB</h2>
+            <p>GLYPHLAB is a premium ASCII art generation tool. Upload images, adjust settings, preview side-by-side, and export in multiple formats — all client-side.</p>
+        </div>
+    </div>
+
+    <!-- Drag Overlay -->
+    <div class="drag-overlay" id="dragOverlay" aria-hidden="true">
+        <div><div class="drag-overlay__content">DROP IMAGE HERE</div><div class="drag-overlay__sub">Release to start converting</div></div>
+    </div>
+
+    <script src="js/asciiEngine.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

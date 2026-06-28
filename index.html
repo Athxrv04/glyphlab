@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GLYPHLAB — Transform images into beautiful ASCII character art in real time.">
+    <title>GLYPHLAB</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="assets/logos/favicon.png?v=1">
+    <link rel="shortcut icon" type="image/png" href="assets/logos/favicon.png?v=1">
+</head>
+<body>
+
+    <header class="header" role="banner">
+        <a href="index.html" class="header__logo">
+            <img src="assets/logos/logo.png" alt="GLYPHLAB Logo" class="header__logo-img">
+            <span>GLYPHLAB</span>
+        </a>
+        <nav class="header__nav" aria-label="Main navigation">
+            <a class="header__btn header__btn--active" href="index.html">Home</a>
+            <a class="header__btn" href="converter.html">Converter</a>
+            <a class="header__btn" href="camera.html">Live Camera</a>
+            <button class="header__btn header__btn--accent" onclick="UI.openAbout()">About</button>
+            <div class="theme-selector" id="themeSelector">
+                <button class="theme-selector__btn" title="Theme" aria-label="Change theme" id="themeToggleBtn">◈ Theme</button>
+                <div class="theme-selector__dropdown" id="themeDropdown">
+                    <button class="theme-option" data-theme="white"><span class="theme-option__swatch" style="background:#FFFFFF"></span> White Terminal</button>
+                    <button class="theme-option" data-theme="green"><span class="theme-option__swatch" style="background:#00FF88"></span> Green CRT</button>
+                    <button class="theme-option" data-theme="amber"><span class="theme-option__swatch" style="background:#FFB000"></span> Amber CRT</button>
+                    <button class="theme-option" data-theme="blue"><span class="theme-option__swatch" style="background:#00CCFF"></span> Cyber Blue</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" id="hero" aria-label="Hero">
+        <canvas class="hero__particles" id="heroCanvas" aria-hidden="true"></canvas>
+        <div class="hero__split">
+            <!-- LEFT: Branding -->
+            <div class="hero__brand">
+                <img src="assets/logos/logo.png" alt="GLYPHLAB Logo" class="hero__logo-img">
+                <h1 class="hero__title"><span class="hl">GLYPH</span><span class="hl2">LAB</span></h1>
+                <p class="hero__sub">Transform Pixels Into Character Art</p>
+                <div class="hero__badges">
+                    <span class="hero__badge-tag">▸ ASCII</span>
+                    <span class="hero__badge-tag">▸ LIVE CAMERA</span>
+                    <span class="hero__badge-tag">▸ OPEN SOURCE</span>
+                </div>
+                <div class="hero__cta-row">
+                    <a class="hero__cta" href="converter.html">Start Creating</a>
+                    <a class="hero__cta hero__cta--secondary" href="camera.html"><img src="assets/icons/camera.png" alt="Camera" class="cam-icon-img"> Live Camera</a>
+                </div>
+            </div>
+
+            <!-- RIGHT: Gallery Showcase -->
+            <div class="hero__showcase" id="heroGallery">
+                <div class="hero-gallery__header">
+                    <span class="hero-gallery__label">▸ ENGINE SHOWCASE</span>
+                    <span class="hero-gallery__slide-count" id="gallerySlideCount"></span>
+                </div>
+                <div class="hero-gallery__comparison">
+                    <div class="hero-gallery__comp-original"></div>
+                    <div class="hero-gallery__comp-ascii"></div>
+                    <div class="hero-gallery__comp-slider" tabindex="0" role="slider" aria-valuenow="50" aria-valuemin="5" aria-valuemax="95" aria-label="Before/After comparison slider">
+                        <div class="hero-gallery__comp-slider-btn"></div>
+                    </div>
+                    <!-- Slide Info Overlay -->
+                    <div class="hero-gallery__info">
+                        <span class="hero-gallery__info-name"></span>
+                        <span class="hero-gallery__info-detail">
+                            <span class="hero-gallery__info-preset"></span>
+                            <span class="hero-gallery__info-sep">·</span>
+                            <span class="hero-gallery__info-chars"></span>
+                            <span class="hero-gallery__info-sep">·</span>
+                            <span>Coloured ASCII</span>
+                            <span class="hero-gallery__info-sep">·</span>
+                            <span class="hero-gallery__info-time"></span>
+                        </span>
+                    </div>
+                </div>
+                <!-- Navigation -->
+                <div class="hero-gallery__nav">
+                    <button class="hero-gallery__nav-prev" aria-label="Previous slide">◂</button>
+                    <div class="hero-gallery__dots"></div>
+                    <button class="hero-gallery__nav-next" aria-label="Next slide">▸</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Engine Metrics -->
+        <div class="hero__metrics" id="heroMetrics">
+            <div class="hero-metric">
+                <span class="hero-metric__label">Images</span>
+                <span class="hero-metric__value" id="metricImages" data-target="0" data-suffix="">0</span>
+            </div>
+            <div class="hero-metric">
+                <span class="hero-metric__label">Characters</span>
+                <span class="hero-metric__value" id="metricChars" data-target="0" data-suffix="+">0</span>
+            </div>
+            <div class="hero-metric">
+                <span class="hero-metric__label">Average Render</span>
+                <span class="hero-metric__value" id="metricTime" data-target="0" data-suffix="ms">0</span>
+            </div>
+            <div class="hero-metric">
+                <span class="hero-metric__label">Runs In Browser</span>
+                <span class="hero-metric__value" id="metricAccuracy" data-target="100" data-suffix="%">0</span>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- HOW TO USE -->
+    <section class="section" id="howto-section" aria-label="How to use">
+        <div class="section__label">░░ Guide</div>
+        <h2 class="section__title">How to Use GLYPHLAB</h2>
+        <div class="howto-grid">
+            <div class="howto-card">
+                <div class="howto-card__step">01</div>
+                <h3>Upload or Capture</h3>
+                <p>Go to the <a href="converter.html">Converter</a> page and drop any PNG, JPG, or WEBP image. Or open the <a href="camera.html">Live Camera</a> for real-time rendering.</p>
+            </div>
+            <div class="howto-card">
+                <div class="howto-card__step">02</div>
+                <h3>Adjust Settings</h3>
+                <p>Fine-tune ASCII density, font size, contrast, brightness, and pick from character presets — Classic, Detailed, Terminal, Pixel, or Custom.</p>
+            </div>
+            <div class="howto-card">
+                <div class="howto-card__step">03</div>
+                <h3>Preview & Compare</h3>
+                <p>See your original image side-by-side with the ASCII output. Toggle between Standard Preview and an interactive Comparison slider.</p>
+            </div>
+            <div class="howto-card">
+                <div class="howto-card__step">04</div>
+                <h3>Export Anywhere</h3>
+                <p>Copy to clipboard, or download as TXT, HTML, PNG, or SVG. All rendering happens in your browser — zero server uploads.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer" role="contentinfo">
+        <div class="footer__content">
+            <img src="assets/logos/logo.png" alt="GLYPHLAB Logo" class="footer__logo-img">
+            <p>
+                <span>GLYPHLAB</span> <span class="footer__version">v1.0.0</span>
+                <span class="footer__divider">·</span>
+                <span>Created by <span class="footer__socials-name">Atharv Sharma</span></span>
+                <span class="footer__divider">·</span>
+                <a href="https://github.com/Athxrv04" target="_blank" rel="noopener noreferrer" class="footer__link">GitHub</a>
+                <span class="footer__divider">·</span>
+                <a href="https://www.linkedin.com/in/atharv-sharma-dev" target="_blank" rel="noopener noreferrer" class="footer__link">LinkedIn</a>
+            </p>
+        </div>
+        <p class="footer__credits">Built with HTML, CSS & Vanilla JavaScript · Zero Dependencies</p>
+    </footer>
+
+    <!-- About Modal -->
+    <div class="modal" id="aboutModal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal__card">
+            <button class="modal__close" onclick="UI.closeAbout()" aria-label="Close modal">✕</button>
+            <h2>About GLYPHLAB</h2>
+            <p>GLYPHLAB is a premium ASCII art generation tool that transforms images into beautiful character-based artwork in real time. Inspired by retro computing aesthetics and terminal culture.</p>
+            <h2>What is ASCII Art?</h2>
+            <p>ASCII art uses printable characters to create images and visual compositions. It originated in the early days of computing when displays could only render text characters.</p>
+            <h2>How the Algorithm Works</h2>
+            <p>The conversion engine draws the uploaded image onto a hidden <code>&lt;canvas&gt;</code> element. Each pixel's RGB values are converted to brightness: <code>0.299×R + 0.587×G + 0.114×B</code>, then mapped to characters ordered lightest to darkest.</p>
+            <h2>Technologies Used</h2>
+            <p><strong>HTML5 Canvas API</strong> — Pixel-level image manipulation.<br>
+               <strong>Vanilla JavaScript</strong> — Modular architecture.<br>
+               <strong>CSS3</strong> — Custom properties, grid layouts, animations.<br>
+               <strong>Zero dependencies</strong> — Everything runs client-side.</p>
+        </div>
+    </div>
+
+    <script src="js/asciiEngine.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/heroGallery.js"></script>
+    <script>
+        UI.initParticles(document.getElementById('heroCanvas'));
+        UI.initTheme();
+        UI.initAOTD();
+        HeroGallery.init();
+        document.getElementById('aboutModal').addEventListener('click', e => {
+            if (e.target.id === 'aboutModal') UI.closeAbout();
+        });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') UI.closeAbout(); });
+    </script>
+</body>
+</html>

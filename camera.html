@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GLYPHLAB Live Camera — Real-time webcam to ASCII art conversion at ~10 FPS.">
+    <title>GLYPHLAB · Live Camera</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="assets/logos/favicon.png?v=1">
+    <link rel="shortcut icon" type="image/png" href="assets/logos/favicon.png?v=1">
+</head>
+<body>
+
+    <header class="header" role="banner">
+        <a href="index.html" class="header__logo">
+            <img src="assets/logos/logo.png" alt="GLYPHLAB Logo" class="header__logo-img">
+            <span>GLYPHLAB</span>
+        </a>
+        <nav class="header__nav" aria-label="Main navigation">
+            <a class="header__btn" href="index.html">Home</a>
+            <a class="header__btn" href="converter.html">Converter</a>
+            <a class="header__btn header__btn--active" href="camera.html">Live Camera</a>
+            <button class="header__btn header__btn--accent" onclick="UI.openAbout()">About</button>
+            <div class="theme-selector" id="themeSelector">
+                <button class="theme-selector__btn" title="Theme" aria-label="Change theme" id="themeToggleBtn">◈ Theme</button>
+                <div class="theme-selector__dropdown" id="themeDropdown">
+                    <button class="theme-option" data-theme="white"><span class="theme-option__swatch" style="background:#FFFFFF"></span> White Terminal</button>
+                    <button class="theme-option" data-theme="green"><span class="theme-option__swatch" style="background:#00FF88"></span> Green CRT</button>
+                    <button class="theme-option" data-theme="amber"><span class="theme-option__swatch" style="background:#FFB000"></span> Amber CRT</button>
+                    <button class="theme-option" data-theme="blue"><span class="theme-option__swatch" style="background:#00CCFF"></span> Cyber Blue</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Page Banner -->
+    <div class="page-hero">
+        <h1 class="page-hero__title">Live ASCII Camera</h1>
+        <p class="page-hero__sub">Turn on your webcam and watch yourself rendered as real-time ASCII art at ~10 FPS</p>
+    </div>
+
+    <!-- CAMERA -->
+    <section class="section" id="webcam-section" aria-label="Live ASCII Camera">
+        <div class="section__label">░░ Live Feed</div>
+        <h2 class="section__title">Webcam Preview</h2>
+        <p class="section__desc">All processing happens locally in your browser — no video data leaves your device. Grant camera permission to begin.</p>
+
+        <div class="webcam-container">
+            <!-- Primary controls: Start / Stop -->
+            <div class="webcam-controls">
+                <button class="webcam-btn webcam-btn--start" id="webcamStartBtn" aria-label="Start camera">
+                    <span>▶</span> Start Camera
+                </button>
+                <button class="webcam-btn webcam-btn--stop" id="webcamStopBtn" aria-label="Stop camera" style="display:none">
+                    <span>■</span> Stop Camera
+                </button>
+                <span class="webcam-status" id="webcamStatus">Camera Stopped</span>
+            </div>
+
+            <!-- Action bar: Capture / Timer / Record (shown when camera is active) -->
+            <div class="webcam-action-bar" id="webcamActionBar" style="display:none">
+                <!-- Capture -->
+                <button class="cam-action-btn cam-action-btn--capture" id="webcamCaptureBtn" title="Capture current frame">
+                    <img src="assets/icons/camera.png" alt="Camera" class="cam-icon-img">
+                    <span>Capture</span>
+                </button>
+
+                <!-- Timer -->
+                <div class="cam-action-group">
+                    <select class="cam-timer-select" id="webcamTimerSelect" title="Timer delay">
+                        <option value="3">3s</option>
+                        <option value="5">5s</option>
+                        <option value="10">10s</option>
+                    </select>
+                    <button class="cam-action-btn cam-action-btn--timer" id="webcamTimerBtn" title="Capture with timer">
+                        <img src="assets/icons/timer.png" alt="Timer" class="cam-icon-img">
+                        <span>Timer</span>
+                    </button>
+                </div>
+
+                <!-- Record -->
+                <button class="cam-action-btn cam-action-btn--record" id="webcamRecordBtn" title="Record ASCII video">
+                    <img src="assets/icons/videorecording.png" alt="Record" class="cam-icon-img">
+                    <span>Record</span>
+                </button>
+                <button class="cam-action-btn cam-action-btn--record-stop" id="webcamRecordStopBtn" title="Stop recording" style="display:none">
+                    <span class="cam-action-btn__icon">⏹</span>
+                    <span>Stop</span>
+                </button>
+                <span class="cam-record-timer" id="webcamRecordTimer" style="display:none">00:00</span>
+            </div>
+
+            <!-- Live Preview -->
+            <div class="webcam-preview" id="webcamPreview">
+                <video id="webcamVideo" autoplay playsinline muted style="display:none"></video>
+                <pre class="webcam-ascii-output" id="webcamAsciiOutput" aria-label="Live ASCII camera output"></pre>
+                <div class="webcam-empty" id="webcamEmpty">
+                    <img src="assets/icons/camera.png" alt="Camera" class="webcam-empty__icon-img">
+                    <span>Click "Start Camera" to begin live ASCII rendering</span>
+                </div>
+                <!-- Timer countdown overlay -->
+                <div class="cam-timer-overlay" id="webcamTimerOverlay">
+                    <span class="cam-timer-overlay__count" id="webcamTimerCount">3</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section" aria-label="Features">
+        <div class="section__label">░░ Features</div>
+        <h2 class="section__title">Camera Features</h2>
+        <div class="howto-grid">
+            <div class="howto-card">
+                <div class="howto-card__step"><img src="assets/icons/camera.png" alt="Camera" class="cam-icon-img" style="height:1.5rem"></div>
+                <h3>Instant Capture</h3>
+                <p>Click the Capture button to snapshot the current ASCII frame. Downloads both a plain-text TXT file and a rendered PNG image with your current theme colors.</p>
+            </div>
+            <div class="howto-card">
+                <div class="howto-card__step"><img src="assets/icons/timer.png" alt="Timer" class="cam-icon-img" style="height:1.5rem"></div>
+                <h3>Timer Mode</h3>
+                <p>Set a 3, 5, or 10 second countdown timer. A large countdown overlay appears on the preview, then automatically captures when it reaches zero.</p>
+            </div>
+            <div class="howto-card">
+                <div class="howto-card__step"><img src="assets/icons/videorecording.png" alt="Video" class="cam-icon-img" style="height:1.5rem"></div>
+                <h3>Video Recording</h3>
+                <p>Record the live ASCII feed as a WebM video file. The ASCII art is rendered onto a hidden canvas at 10 FPS using your theme's accent color, then encoded in real time.</p>
+            </div>
+            <div class="howto-card">
+                <div class="howto-card__step"><img src="assets/icons/lock.png" alt="Lock" class="cam-icon-img" style="height:1.5rem"></div>
+                <h3>100% Private</h3>
+                <p>All processing happens in your browser. No video, images, or data is uploaded to any server. The camera stream is released the moment you click Stop.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer" role="contentinfo">
+        <div class="footer__content">
+            <img src="assets/logos/logo.png" alt="GLYPHLAB Logo" class="footer__logo-img">
+            <p>
+                <span>GLYPHLAB</span> <span class="footer__version">v1.0.0</span>
+                <span class="footer__divider">·</span>
+                <span>Created by <span class="footer__socials-name">Atharv Sharma</span></span>
+                <span class="footer__divider">·</span>
+                <a href="https://github.com/Athxrv04" target="_blank" rel="noopener noreferrer" class="footer__link">GitHub</a>
+                <span class="footer__divider">·</span>
+                <a href="https://www.linkedin.com/in/atharv-sharma-dev" target="_blank" rel="noopener noreferrer" class="footer__link">LinkedIn</a>
+            </p>
+        </div>
+        <p class="footer__credits">Built with HTML, CSS & Vanilla JavaScript · Zero Dependencies</p>
+    </footer>
+
+    <!-- About Modal -->
+    <div class="modal" id="aboutModal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal__card">
+            <button class="modal__close" onclick="UI.closeAbout()" aria-label="Close modal">✕</button>
+            <h2>About GLYPHLAB</h2>
+            <p>GLYPHLAB converts your webcam feed into real-time ASCII art using the Canvas API and MediaDevices API — entirely in the browser.</p>
+        </div>
+    </div>
+
+    <!-- Capture/Record Preview Modal -->
+    <div class="modal" id="capturePreviewModal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal__card modal__card--wide">
+            <button class="modal__close" onclick="UI.closeCapturePreview()" aria-label="Close modal">✕</button>
+            <h2 id="captureModalTitle">Capture Preview</h2>
+            
+            <div class="capture-preview-container">
+                <!-- For Image Snapshot -->
+                <div id="captureImagePreview" style="display:none; width:100%; text-align:center;">
+                    <pre class="capture-preview-ascii" id="captureAsciiText"></pre>
+                </div>
+                
+                <!-- For Video recording -->
+                <div id="captureVideoPreview" style="display:none; width:100%; text-align:center;">
+                    <video id="captureVideoElement" controls autoplay loop></video>
+                </div>
+            </div>
+            
+            <div class="capture-modal-actions" id="captureModalActions">
+                <button class="cam-action-btn" id="saveTxtBtn" aria-label="Save as TXT file"><img src="assets/icons/downloadtxt.png" class="cam-icon-img" alt="Save TXT"> Save as TXT</button>
+                <button class="cam-action-btn" id="savePngBtn" aria-label="Save as PNG image"><img src="assets/icons/downloadpng.png" class="cam-icon-img" alt="Save PNG"> Save as PNG</button>
+                <button class="cam-action-btn" id="saveVideoBtn" aria-label="Save as WebM video"><img src="assets/icons/videorecording.png" class="cam-icon-img" alt="Save Video"> Save as Video</button>
+                <button class="cam-action-btn cam-action-btn--secondary" onclick="UI.closeCapturePreview()" aria-label="Discard capture">Discard</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/ui.js"></script>
+    <script>
+        UI.initTheme();
+        UI.initWebcam();
+        
+        document.getElementById('aboutModal').addEventListener('click', e => {
+            if (e.target.id === 'aboutModal') UI.closeAbout();
+        });
+        document.getElementById('capturePreviewModal').addEventListener('click', e => {
+            if (e.target.id === 'capturePreviewModal') UI.closeCapturePreview();
+        });
+        document.addEventListener('keydown', e => { 
+            if (e.key === 'Escape') {
+                UI.closeAbout();
+                UI.closeCapturePreview();
+            }
+        });
+    </script>
+</body>
+</html>
